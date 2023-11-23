@@ -12,6 +12,8 @@ bash run_1_behavior.sh
 
 The `.vcd` file will be generated in `vcd/`.
 
+![behavior](https://s2.loli.net/2023/11/23/AWPSQ7ErBaNxsob.png)
+
 ## DC Synthesis
 
 Change the `src_files` in `run.tcl` and the clock/reset definition in `scripts/cons.tcl`. Then run:
@@ -33,3 +35,5 @@ bash run_3_post.sh
 ```
 
 The `.vcd` file will be generated in `vcd/`. Note the `.vcd` file is different from the one generated in behavioral simulation.
+
+![post](https://s2.loli.net/2023/11/23/nGh2muBvArWVPbs.png)
