@@ -1,0 +1,3 @@
+../src/counter.v
+../src/top.v
+../src/tb.v

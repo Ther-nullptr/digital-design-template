@@ -1,0 +1,207 @@
+(DELAYFILE
+(SDFVERSION "OVI 2.1")
+(DESIGN "top")
+(DATE "Thu Nov 23 14:24:10 2023")
+(VENDOR "scadv10_cln65gp_rvt_ss_0p9v_125c")
+(PROGRAM "Synopsys Design Compiler cmos")
+(VERSION "P-2019.03-SP5-6")
+(DIVIDER /)
+(VOLTAGE 1.10:0.90:0.90)
+(PROCESS "ff_1p1v_m40c:ss_0p9v_125c:ss_0p9v_125c")
+(TEMPERATURE -40.00:125.00:125.00)
+(TIMESCALE 1ns)
+(CELL
+  (CELLTYPE "top")
+  (INSTANCE)
+  (DELAY
+    (ABSOLUTE
+    (INTERCONNECT cnt/out_reg_0_/Q cnt/U8/A (0.000:0.000:0.000))
+    (INTERCONNECT cnt/out_reg_2_/Q cnt/U7/AN (0.000:0.000:0.000))
+    (INTERCONNECT cnt/U3/Y cnt/U7/B (0.000:0.000:0.000))
+    (INTERCONNECT cnt/out_reg_3_/Q cnt/U6/A (0.000:0.000:0.000))
+    (INTERCONNECT cnt/U7/Y cnt/U6/B (0.000:0.000:0.000))
+    (INTERCONNECT cnt/out_reg_2_/Q cnt/U5/A (0.000:0.000:0.000))
+    (INTERCONNECT cnt/U3/Y cnt/U5/B (0.000:0.000:0.000))
+    (INTERCONNECT cnt/out_reg_1_/Q cnt/U4/A (0.000:0.000:0.000))
+    (INTERCONNECT cnt/U8/Y cnt/U4/B (0.000:0.000:0.000))
+    (INTERCONNECT cnt/out_reg_1_/Q cnt/U3/A (0.000:0.000:0.000))
+    (INTERCONNECT cnt/out_reg_0_/Q cnt/U3/B (0.000:0.000:0.000))
+    (INTERCONNECT cnt/U6/Y cnt/out_reg_3_/D (0.000:0.000:0.000))
+    (INTERCONNECT clk cnt/out_reg_3_/CK (0.000:0.000:0.000))
+    (INTERCONNECT cnt/U9/Y cnt/out_reg_3_/R (0.000:0.000:0.000))
+    (INTERCONNECT cnt/U8/Y cnt/out_reg_0_/D (0.000:0.000:0.000))
+    (INTERCONNECT clk cnt/out_reg_0_/CK (0.000:0.000:0.000))
+    (INTERCONNECT cnt/U9/Y cnt/out_reg_0_/R (0.000:0.000:0.000))
+    (INTERCONNECT cnt/U5/Y cnt/out_reg_2_/D (0.000:0.000:0.000))
+    (INTERCONNECT clk cnt/out_reg_2_/CK (0.000:0.000:0.000))
+    (INTERCONNECT cnt/U9/Y cnt/out_reg_2_/R (0.000:0.000:0.000))
+    (INTERCONNECT cnt/U4/Y cnt/out_reg_1_/D (0.000:0.000:0.000))
+    (INTERCONNECT clk cnt/out_reg_1_/CK (0.000:0.000:0.000))
+    (INTERCONNECT cnt/U9/Y cnt/out_reg_1_/R (0.000:0.000:0.000))
+    (INTERCONNECT rst cnt/U9/A (0.000:0.000:0.000))
+    )
+  )
+)
+(CELL
+  (CELLTYPE "INVX0P5BA10TR")
+  (INSTANCE cnt/U8)
+  (DELAY
+    (ABSOLUTE
+    (IOPATH A Y (0.138:0.332:0.332) (0.131:0.406:0.406))
+    )
+  )
+)
+(CELL
+  (CELLTYPE "NOR2BX1MA10TR")
+  (INSTANCE cnt/U7)
+  (DELAY
+    (ABSOLUTE
+    (IOPATH AN Y (0.067:0.240:0.240) (0.085:0.223:0.223))
+    (IOPATH B Y (0.082:0.199:0.199) (0.053:0.170:0.170))
+    )
+  )
+)
+(CELL
+  (CELLTYPE "XOR2X0P5MA10TR")
+  (INSTANCE cnt/U6)
+  (DELAY
+    (ABSOLUTE
+    (COND B == 1'b1 (IOPATH A Y (0.098:0.273:0.273) (0.068:0.253:0.253)))
+    (COND B == 1'b0 (IOPATH A Y (0.087:0.288:0.288) (0.081:0.213:0.213)))
+    (COND A == 1'b1 (IOPATH B Y (0.080:0.228:0.228) (0.067:0.183:0.183)))
+    (COND A == 1'b0 (IOPATH B Y (0.080:0.232:0.232) (0.069:0.194:0.194)))
+    )
+  )
+)
+(CELL
+  (CELLTYPE "XNOR2X0P5MA10TR")
+  (INSTANCE cnt/U5)
+  (DELAY
+    (ABSOLUTE
+    (COND B == 1'b1 (IOPATH A Y (0.088:0.293:0.293) (0.082:0.216:0.216)))
+    (COND B == 1'b0 (IOPATH A Y (0.098:0.274:0.274) (0.068:0.254:0.254)))
+    (COND A == 1'b1 (IOPATH B Y (0.083:0.260:0.260) (0.089:0.238:0.238)))
+    (COND A == 1'b0 (IOPATH B Y (0.110:0.301:0.301) (0.082:0.244:0.244)))
+    )
+  )
+)
+(CELL
+  (CELLTYPE "XNOR2X0P5MA10TR")
+  (INSTANCE cnt/U4)
+  (DELAY
+    (ABSOLUTE
+    (COND B == 1'b1 (IOPATH A Y (0.088:0.293:0.293) (0.082:0.216:0.216)))
+    (COND B == 1'b0 (IOPATH A Y (0.098:0.274:0.274) (0.068:0.254:0.254)))
+    (COND A == 1'b1 (IOPATH B Y (0.083:0.248:0.248) (0.090:0.230:0.230)))
+    (COND A == 1'b0 (IOPATH B Y (0.112:0.286:0.286) (0.077:0.216:0.216)))
+    )
+  )
+)
+(CELL
+  (CELLTYPE "NAND2X0P5MA10TR")
+  (INSTANCE cnt/U3)
+  (DELAY
+    (ABSOLUTE
+    (IOPATH A Y (0.164:0.402:0.402) (0.148:0.413:0.413))
+    (IOPATH B Y (0.165:0.405:0.405) (0.129:0.388:0.388))
+    )
+  )
+)
+(CELL
+  (CELLTYPE "DFFRPQX4MA10TR")
+  (INSTANCE cnt/out_reg_3_)
+  (DELAY
+    (ABSOLUTE
+    (IOPATH (posedge CK) Q (0.287:0.600:0.600) (0.195:0.424:0.424))
+    (COND D == 1'b0 && CK == 1'b0 (IOPATH (posedge R) Q () (0.171:0.373:0.373)))
+    (COND D == 1'b1 && CK == 1'b0 (IOPATH (posedge R) Q () (0.170:0.372:0.372)))
+    (COND D == 1'b0 && CK == 1'b1 (IOPATH (posedge R) Q () (0.159:0.342:0.342)))
+    (COND D == 1'b1 && CK == 1'b1 (IOPATH (posedge R) Q () (0.159:0.342:0.342)))
+    )
+  )
+  (TIMINGCHECK
+    (PERIOD CK (1.000:1.000:1.000))
+    (SETUP (posedge D) (posedge CK) (0.016:0.068:0.068))
+    (SETUP (negedge D) (posedge CK) (0.019:0.091:0.091))
+    (HOLD (posedge D) (posedge CK) (-0.003:-0.025:-0.025))
+    (HOLD (negedge D) (posedge CK) (-0.003:-0.045:-0.045))
+    (SETUP (negedge R) (posedge CK) (-0.014:-0.023:-0.023))
+    (HOLD (negedge R) (posedge CK) (0.034:0.088:0.088))
+  )
+)
+(CELL
+  (CELLTYPE "DFFRPQX4MA10TR")
+  (INSTANCE cnt/out_reg_0_)
+  (DELAY
+    (ABSOLUTE
+    (IOPATH (posedge CK) Q (0.292:0.609:0.609) (0.197:0.429:0.429))
+    (COND D == 1'b0 && CK == 1'b0 (IOPATH (posedge R) Q () (0.173:0.378:0.378)))
+    (COND D == 1'b1 && CK == 1'b0 (IOPATH (posedge R) Q () (0.173:0.377:0.377)))
+    (COND D == 1'b0 && CK == 1'b1 (IOPATH (posedge R) Q () (0.161:0.347:0.347)))
+    (COND D == 1'b1 && CK == 1'b1 (IOPATH (posedge R) Q () (0.161:0.347:0.347)))
+    )
+  )
+  (TIMINGCHECK
+    (PERIOD CK (1.000:1.000:1.000))
+    (SETUP (posedge D) (posedge CK) (0.016:0.065:0.065))
+    (SETUP (negedge D) (posedge CK) (0.040:0.095:0.095))
+    (HOLD (posedge D) (posedge CK) (-0.002:-0.024:-0.024))
+    (HOLD (negedge D) (posedge CK) (-0.018:-0.048:-0.048))
+    (SETUP (negedge R) (posedge CK) (-0.014:-0.023:-0.023))
+    (HOLD (negedge R) (posedge CK) (0.034:0.088:0.088))
+  )
+)
+(CELL
+  (CELLTYPE "DFFRPQX4MA10TR")
+  (INSTANCE cnt/out_reg_2_)
+  (DELAY
+    (ABSOLUTE
+    (IOPATH (posedge CK) Q (0.292:0.609:0.609) (0.197:0.430:0.430))
+    (COND D == 1'b0 && CK == 1'b0 (IOPATH (posedge R) Q () (0.174:0.379:0.379)))
+    (COND D == 1'b1 && CK == 1'b0 (IOPATH (posedge R) Q () (0.173:0.377:0.377)))
+    (COND D == 1'b0 && CK == 1'b1 (IOPATH (posedge R) Q () (0.161:0.347:0.347)))
+    (COND D == 1'b1 && CK == 1'b1 (IOPATH (posedge R) Q () (0.161:0.347:0.347)))
+    )
+  )
+  (TIMINGCHECK
+    (PERIOD CK (1.000:1.000:1.000))
+    (SETUP (posedge D) (posedge CK) (0.016:0.068:0.068))
+    (SETUP (negedge D) (posedge CK) (0.020:0.091:0.091))
+    (HOLD (posedge D) (posedge CK) (-0.003:-0.025:-0.025))
+    (HOLD (negedge D) (posedge CK) (-0.003:-0.046:-0.046))
+    (SETUP (negedge R) (posedge CK) (-0.014:-0.023:-0.023))
+    (HOLD (negedge R) (posedge CK) (0.034:0.088:0.088))
+  )
+)
+(CELL
+  (CELLTYPE "DFFRPQX4MA10TR")
+  (INSTANCE cnt/out_reg_1_)
+  (DELAY
+    (ABSOLUTE
+    (IOPATH (posedge CK) Q (0.292:0.609:0.609) (0.197:0.430:0.430))
+    (COND D == 1'b0 && CK == 1'b0 (IOPATH (posedge R) Q () (0.174:0.379:0.379)))
+    (COND D == 1'b1 && CK == 1'b0 (IOPATH (posedge R) Q () (0.173:0.377:0.377)))
+    (COND D == 1'b0 && CK == 1'b1 (IOPATH (posedge R) Q () (0.161:0.347:0.347)))
+    (COND D == 1'b1 && CK == 1'b1 (IOPATH (posedge R) Q () (0.161:0.347:0.347)))
+    )
+  )
+  (TIMINGCHECK
+    (PERIOD CK (1.000:1.000:1.000))
+    (SETUP (posedge D) (posedge CK) (0.016:0.068:0.068))
+    (SETUP (negedge D) (posedge CK) (0.020:0.091:0.091))
+    (HOLD (posedge D) (posedge CK) (-0.003:-0.025:-0.025))
+    (HOLD (negedge D) (posedge CK) (-0.003:-0.046:-0.046))
+    (SETUP (negedge R) (posedge CK) (-0.014:-0.023:-0.023))
+    (HOLD (negedge R) (posedge CK) (0.034:0.088:0.088))
+  )
+)
+(CELL
+  (CELLTYPE "INVX6BA10TR")
+  (INSTANCE cnt/U9)
+  (DELAY
+    (ABSOLUTE
+    (IOPATH A Y (0.000:0.000:0.000))
+    )
+  )
+)
+)

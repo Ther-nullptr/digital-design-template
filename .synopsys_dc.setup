@@ -1,0 +1,52 @@
+######################################
+#                                    #
+#  Technology : TSMC65NGP        #
+#           #
+#        Date : Thu Oct 17, 2011     #
+#                                    #
+######################################
+
+set source_path "src"
+set script_path "scripts"
+set sdc_path "sdc"
+set log_path "log"
+set db_path "db"
+set netlist_path "netlist"
+set report_path "rpt"
+set lib_path "lib"
+set def_path "def"
+set pdef_path "pdef"
+set search_path "$search_path $lib_path $lib_path/sim_ver $source_path $db_path"
+
+set command_log_file $log_path/command.log
+set view_command_log_file $log_path/view_command.log
+
+set symbol_library {tsmc65_rvt_sc_adv10.sdb}
+set target_library {scadv10_cln65gp_rvt_ss_0p9v_125c.db}
+
+#set synthetic_library {dw_foundation.sldb dw01.sldb}
+set synthetic_library {dw_foundation.sldb}
+set link_library "$target_library $synthetic_library *"
+#set link_library "$target_library *"
+set synlib_wait_for_design_license {"DesignWare-Foundation"}
+
+#set physical_library {cms9flprvt_m_8lm_2thick.pdb}
+
+set_min_library "scadv10_cln65gp_rvt_ss_0p9v_125c.db" -min_version "scadv10_cln65gp_rvt_ff_1p1v_m40c.db" 
+
+set verilogout_no_tri true
+set verilogout_higher_designs_first true
+set high_fanout_net_threshold 200
+#set verilogout_show_unconnected_pins true
+set auto_wire_load_selection true
+
+set physopt_fix_multiple_port_nets true
+set physopt_pnet_complete_blockage_layer_names "METAL1 METAL2"
+set physopt_enable_placement_hfs true
+set physopt_hfs_mf_threshold 1000
+set physopt_hfs_hf_threshold 2000
+set physopt_hfs_remove_effort medium
+
+set cts_iterative_optimization true
+set cts_no_implicit_exclude_pins true
+

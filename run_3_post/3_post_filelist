@@ -1,0 +1,3 @@
+../src/tsmc65.v
+../netlist/top_post.v
+../src/tb.v
