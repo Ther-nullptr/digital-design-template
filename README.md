@@ -1,5 +1,9 @@
 # Digital Design Template
 
+## Preprocess
+
+Download the tsmc 65nm standard cell library from [here](https://cloud.tsinghua.edu.cn/f/f3e4d88661224af098db/?dl=1) and unzip it to `lib/`.
+
 ## Behavioral Simulation
 
 The source files are in `src/` and the testbenches are in `test/`. Change the `run_1_behavior/1_behavior_filelist` according to your needs. Then run:
