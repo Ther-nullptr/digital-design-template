@@ -28,7 +28,7 @@ bash run_2_dc.sh
 
 The netlist will be generated in `netlist/`, and the reports will be generated in `report/`.
 
-### Post-Synthesis Simulation
+## Post-Synthesis Simulation
 
 Change the `run_3_post/3_post_filelist` according to your needs. Then run:
 
