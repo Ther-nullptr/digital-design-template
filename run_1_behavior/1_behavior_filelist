@@ -1,3 +1,2 @@
-../src/counter.v
-../src/top.v
-../src/tb.v
+../src/pe_array.sv
+../test/tb_pe_array.sv
