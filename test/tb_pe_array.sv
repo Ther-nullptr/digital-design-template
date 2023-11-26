@@ -20,22 +20,29 @@ module tb_pe_array; // test bench
     reg PE_mac_enable;
     reg PE_clear_acc;
 
-    reg signed [BW_ACT-1:0]    PE_act_in [MAC_NUM-1:0];         // input activation
-    reg signed [BW_WET-1:0]    PE_wet_in;         // input weight
-    reg  [7:0]           PE_res_shift_num;
-    wire signed [BW_ACT-1:0]    PE_result_out [MAC_NUM-1:0];    // output result
+    reg signed  [BW_ACT-1:0]    PE_act_in                       [MAC_NUM-1:0];                   // input activation
+    reg signed  [BW_WET-1:0]    PE_wet_in;                                                       // input weight
+    reg         [7:0]           PE_res_shift_num;
+    wire signed [BW_ACT-1:0]    PE_result_out                   [MAC_NUM-1:0];                   // output result
 
-    reg signed [BW_ACT-1:0]Input_activation_main_memory[IA_H-1:0][IA_W-1:0]; // main memory (DRAM)
-    reg signed [BW_ACT-1:0]Weight_main_memory[Weight_H-1:0][Weight_W-1:0];
-    reg signed [BW_ACT-1:0]Output_activation_main_memory[OA_H-1:0][OA_W-1:0];
-    reg signed [BW_ACT-1:0]reference_output[OA_H-1:0][OA_W-1:0];
+    reg signed  [BW_ACT-1:0]    Input_activation_main_memory    [IA_H-1:0][IA_W-1:0];            // main memory (DRAM)
+    reg signed  [BW_ACT-1:0]    Weight_main_memory              [Weight_H-1:0][Weight_W-1:0];
+    reg signed  [BW_ACT-1:0]    Output_activation_main_memory   [OA_H-1:0][OA_W-1:0];
+    reg signed  [BW_ACT-1:0]    reference_output                [OA_H-1:0][OA_W-1:0];
+
+    //! only for waveform
+    genvar gv_i;
+    for (gv_i = 0; gv_i < MAC_NUM; gv_i = gv_i + 1) begin : line
+        wire signed [BW_ACT-1:0] PE_result_out_tmp;
+        assign PE_result_out_tmp = PE_result_out[gv_i];
+    end
 
     pe_array #(
                  .MAC_NUM(MAC_NUM),
                  .BW_ACT(BW_ACT),
                  .BW_WET(BW_WET),
                  .BW_ACCU(BW_ACCU)
-             )u_pe_array(
+             ) u_pe_array(
                  .clk(clk),
                  .reset_n(reset_n),
                  .PE_mac_enable(PE_mac_enable),
@@ -110,6 +117,11 @@ module tb_pe_array; // test bench
            $display("wrong num: %d",wrong_num);
         @(negedge clk)
          $finish(0);//仿真结束，自动退出 !!! (important for getting the running time)
+    end
+
+    initial begin // 加载任务数据（不是相对testbench的路径，而是相对于simv文件的路径）
+        $dumpfile("../vcd/tb_pe_array.vcd");
+        $dumpvars(0, tb_pe_array);
     end
 
 endmodule

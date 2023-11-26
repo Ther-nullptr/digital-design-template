@@ -24,7 +24,7 @@ module pe_array #(
 
     always @(posedge clk or negedge reset_n) begin
         if(~reset_n) begin
-            PE_clear_acc_reg <= '0;
+            PE_clear_acc_reg <= 'b0;
         end
         else begin
             PE_clear_acc_reg <= PE_clear_acc;
@@ -33,7 +33,7 @@ module pe_array #(
 
     always @(posedge clk or negedge reset_n) begin
         if(~reset_n) begin // 复位归零
-            PE_wet_in_reg <= '0;
+            PE_wet_in_reg <= 'b0;
         end
         else begin
             PE_wet_in_reg <= PE_wet_in;
@@ -44,10 +44,10 @@ module pe_array #(
     generate
         for (gv_i = 0; gv_i < MAC_NUM; gv_i = gv_i + 1) begin : line
 
-            wire signed [BW_ACCU-1:0]PE_result_shift_temp;
+            wire signed [BW_ACCU-1:0] PE_result_shift_temp;
             always @(posedge clk or negedge reset_n) begin
                 if(~reset_n) begin // 复位归零
-                    PE_act_in_reg[gv_i] <= '0;
+                    PE_act_in_reg[gv_i] <= 'b0;
                 end
                 else begin
                     PE_act_in_reg[gv_i] <= PE_act_in[gv_i];
@@ -56,23 +56,23 @@ module pe_array #(
 
             always @(posedge clk or negedge reset_n) begin
                 if(~reset_n) begin // 复位归零
-                    PE_result_out_reg[gv_i] <= '0;
+                    PE_result_out_reg[gv_i] <= 'b0;
                 end
-                else if(~PE_mac_enable) begin //非计算时刻保�?
+                else if(~PE_mac_enable) begin //非计算时刻保持不变
                     PE_result_out_reg[gv_i] <= PE_result_out_reg[gv_i];
                 end
                 else if(PE_clear_acc_reg) begin
-                    PE_result_out_reg[gv_i] <= '0;
+                    PE_result_out_reg[gv_i] <= 'b0;
                 end
-                else begin //乘累加运�?
-                    PE_result_out_reg[gv_i] <= PE_result_out_reg[gv_i] + PE_wet_in_reg*PE_act_in_reg[gv_i];
+                else begin //乘累加运算
+                    PE_result_out_reg[gv_i] <= PE_result_out_reg[gv_i] + PE_wet_in_reg * PE_act_in_reg[gv_i];
                 end
             end
 
             assign PE_result_shift_temp = PE_result_out_reg[gv_i] >>> PE_res_shift_num;
             always @(posedge clk or negedge reset_n) begin
                 if(~reset_n) begin
-                    PE_result_out[gv_i] <= '0;
+                    PE_result_out[gv_i] <= 'b0;
                 end
                 else if(PE_result_shift_temp>127) begin
                     PE_result_out[gv_i] <= 127;

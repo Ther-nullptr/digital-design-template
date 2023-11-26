@@ -1,7 +1,7 @@
 # Create user defined variables 
-set RST [get_ports rst]
+set RST [get_ports reset_n]
 set CLK_PORT [get_ports clk]
-set CLK_PERIOD 50	
+set CLK_PERIOD 10	
 set CLK_SKEW 0.1
 set CLK_DELAY 0.01
 set INPUT_DELAY 0.2
@@ -12,8 +12,8 @@ set MAX_AREA 0
 # Reset Cons
 remove_driving_cell $RST
 set_drive 0 $RST
-set_dont_touch_network [get_ports rst]
-set_ideal_network [get_ports rst]
+set_dont_touch_network [get_ports reset_n]
+set_ideal_network [get_ports reset_n]
 
 
 # Time Budget 

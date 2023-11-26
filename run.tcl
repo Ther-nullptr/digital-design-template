@@ -1,6 +1,6 @@
 # Setup Input and Output files
-set topcell top
-set src_files [list ./src/top.v ./src/counter.v]
+set topcell pe_array
+set src_files [list ./src/pe_array.sv]
 set cons ./scripts/cons.tcl
 
 set output_sdf  ./netlist/top_post.sdf
@@ -18,7 +18,7 @@ set rpt_resources   ./report/rpt_resources_top
 set rpt_constraint  ./report/rpt_constraint_top
 
 # Start the Syn process
-analyze -f Verilog $src_files 
+analyze -f sverilog $src_files 
 
 elaborate $topcell
 

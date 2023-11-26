@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# make dir
+if [ ! -d "../vcd" ]; then
+  mkdir ../vcd
+fi
+
 # clean
 rm -rf DVEfiles
 rm -rf csrc
@@ -10,4 +15,4 @@ rm *.vpd
 rm ucli.key
 
 # compile
-vcs -f 1_behavior_filelist -full64 -sverilog -debug_access+all -l vcs.log
+vcs -f 1_behavior_filelist -full64 -sverilog -debug_access+all +vcd+vcdpluson -l vcs.log
