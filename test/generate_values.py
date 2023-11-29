@@ -2,10 +2,10 @@ import numpy as np
 
 if __name__ == '__main__':
     size = 8
-    a = np.random.randint(-8, 8, (size, size), dtype=np.int8)
-    b = np.random.randint(-8, 8, (size, size), dtype=np.int8)
+    a = np.arange(size*size).reshape(size, size)
+    b = np.arange(size*size).reshape(size, size)
     
-    c = a @ b
+    c = (a @ b) // 2 ** 8
     
     print(a)
     print(b)

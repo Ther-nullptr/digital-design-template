@@ -7,14 +7,14 @@ module tb_MultAddTree; // test bench
     parameter ACCU_NUM   =   4;  // number of accumulate units
     parameter BW_ACT     =   8;  // bit length of activation
     parameter BW_WET     =   8;  // bit length of weight
-    parameter BW_ACCU    =   32;    // bit length of accu result
+    parameter BW_ACCU    =   32; // bit length of accu result
 
-    parameter IA_H = 100;
-    parameter IA_W = 150;
-    parameter Weight_H = 150;
-    parameter Weight_W = 16;
-    parameter OA_H = 100;
-    parameter OA_W = 16;
+    parameter IA_H       =   100;
+    parameter IA_W       =   150;
+    parameter Weight_H   =   150;
+    parameter Weight_W   =   16;
+    parameter OA_H       =   100;
+    parameter OA_W       =   16;
 
     reg clk;
     reg reset_n;

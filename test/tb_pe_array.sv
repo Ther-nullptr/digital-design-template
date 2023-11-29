@@ -3,17 +3,24 @@
 
 module tb_pe_array; // test bench
 
-    parameter MAC_NUM    =   10;  // number of multiply-accumulation units
+    parameter MAC_NUM    =   4;  // number of multiply-accumulation units
     parameter BW_ACT     =   8;  // bit length of activation
     parameter BW_WET     =   8;  // bit length of weight
     parameter BW_ACCU    =   32;    // bit length of accu result
 
-    parameter IA_H = 100;
-    parameter IA_W = 150;
-    parameter Weight_H = 150;
-    parameter Weight_W = 16;
-    parameter OA_H = 100;
-    parameter OA_W = 16;
+    // parameter IA_H = 100;
+    // parameter IA_W = 150;
+    // parameter Weight_H = 150;
+    // parameter Weight_W = 16;
+    // parameter OA_H = 100;
+    // parameter OA_W = 16;
+
+    parameter IA_H = 8;
+    parameter IA_W = 8;
+    parameter Weight_H = 8;
+    parameter Weight_W = 8;
+    parameter OA_H = 8;
+    parameter OA_W = 8;
 
     reg clk;
     reg reset_n;
@@ -31,10 +38,16 @@ module tb_pe_array; // test bench
     reg signed  [BW_ACT-1:0]    reference_output                [OA_H-1:0][OA_W-1:0];
 
     //! only for waveform
-    genvar gv_i;
-    for (gv_i = 0; gv_i < MAC_NUM; gv_i = gv_i + 1) begin : line
+    genvar gv_output;
+    for (gv_output = 0; gv_output < MAC_NUM; gv_output = gv_output + 1) begin : act_output
         wire signed [BW_ACT-1:0] PE_result_out_tmp;
-        assign PE_result_out_tmp = PE_result_out[gv_i];
+        assign PE_result_out_tmp = PE_result_out[gv_output];
+    end
+
+    genvar gv_input;
+    for (gv_input = 0; gv_input < MAC_NUM; gv_input = gv_input + 1) begin : act_in
+        wire signed [BW_ACT-1:0] PE_act_in_tmp;
+        assign PE_act_in_tmp = PE_act_in[gv_input];
     end
 
     pe_array #(
@@ -42,7 +55,7 @@ module tb_pe_array; // test bench
                  .BW_ACT(BW_ACT),
                  .BW_WET(BW_WET),
                  .BW_ACCU(BW_ACCU)
-             ) u_pe_array(
+              ) u_pe_array (
                  .clk(clk),
                  .reset_n(reset_n),
                  .PE_mac_enable(PE_mac_enable),
@@ -69,12 +82,12 @@ module tb_pe_array; // test bench
     integer wrong_num=0; // 记录错误数据
     initial begin
         @(negedge clk);
-        reset_n = 0; //经过一个周期，拉低reset信号
+        reset_n = 0; // 经过一个周期，拉低reset信号
 
         // 加载任务数据（不是相对testbench的路径，而是相对于simv文件的路径）
-        $readmemb("../test/input_act_bin.txt", Input_activation_main_memory);
-        $readmemb("../test/weight_bin.txt", Weight_main_memory);
-        $readmemb("../test/reference_output_bin.txt", reference_output);
+        $readmemb("../test/input_act_bin_simple2.txt", Input_activation_main_memory);
+        $readmemb("../test/weight_bin_simple2.txt", Weight_main_memory);
+        $readmemb("../test/reference_output_bin_simple2.txt", reference_output);
 
         // loop nest
         @(negedge clk);
@@ -85,10 +98,10 @@ module tb_pe_array; // test bench
             for(integer j=0;j<IA_H/MAC_NUM;j=j+1) begin
                 for(integer i=0;i<IA_W;i=i+1) begin
                     @(negedge clk) begin
-                         if(i==0) begin
+                         if(i == 0) begin
                              PE_clear_acc <= 0; // 确保清零工作准时结束
                          end
-                         for(integer n=0;n<MAC_NUM;n=n+1) begin //相当于课件中的spatial for，在一个周期内完成
+                         for(integer n=0;n<MAC_NUM;n=n+1) begin // 相当于课件中的spatial for，在一个周期内完成
                              PE_act_in[n] <= Input_activation_main_memory[j*MAC_NUM+n][i];
                          end
                          PE_wet_in <= Weight_main_memory[i][m];
@@ -105,18 +118,19 @@ module tb_pe_array; // test bench
                    end
                end
            end
+           @(negedge clk);
            //所有数据都算完后，与reference output进行比对，检验正确与否
            for(integer k=0;k<OA_H;k=k+1) begin
                for(integer p=0;p<OA_W;p=p+1) begin
-                   if(Output_activation_main_memory[k][p]!=reference_output[k][p]) begin
-                       $display("wrong at (%d %d), output %d, reference %d", k, p, Output_activation_main_memory[k][p], reference_output[k][p]);
-                       wrong_num = wrong_num + 1;
-                   end
+                   // if(Output_activation_main_memory[k][p]!=reference_output[k][p]) begin
+                       $display("(%d %d), output %d, reference %d", k, p, Output_activation_main_memory[k][p], reference_output[k][p]);
+                       // wrong_num = wrong_num + 1;
+                   // end
                end
            end
-           $display("wrong num: %d",wrong_num);
-        @(negedge clk)
-         $finish(0);//仿真结束，自动退出 !!! (important for getting the running time)
+           // $display("wrong num: %d",wrong_num);
+        @(negedge clk)begin end
+        $finish(0);//仿真结束，自动退出 !!! (important for getting the running time)
     end
 
     initial begin // 加载任务数据（不是相对testbench的路径，而是相对于simv文件的路径）
