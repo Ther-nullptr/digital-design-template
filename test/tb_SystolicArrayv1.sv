@@ -3,7 +3,7 @@
 
 module tb_MultAddTree; // test bench
 
-    parameter MAC_NUM    =   1;  // number of multiply-accumulation units
+    parameter BN_NUM     =   8;  // number of multiply-accumulation units
     parameter ACCU_NUM   =   4;  // number of accumulate units
     parameter BW_ACT     =   8;  // bit length of activation
     parameter BW_WET     =   8;  // bit length of weight
@@ -21,23 +21,23 @@ module tb_MultAddTree; // test bench
     reg PE_mac_enable;
     reg PE_clear_acc;
 
-    reg signed  [BW_ACT-1:0]    PE_act_in [MAC_NUM-1:0][ACCU_NUM-1:0];         // input activation
-    reg signed  [BW_WET-1:0]    PE_wet_in [ACCU_NUM-1:0];         // input weight
+    reg signed  [BW_ACT-1:0]    PE_act_in [ACCU_NUM-1:0];         // input activation
+    reg signed  [BW_WET-1:0]    PE_wet_in;         // input weight
     reg         [7:0]           PE_res_shift_num;
-    wire signed [BW_ACT-1:0]    PE_result_out [MAC_NUM-1:0];    // output result
+    wire signed [BW_ACT-1:0]    PE_result_out [BN_NUM-1:0];    // output result
 
     reg signed  [BW_ACT-1:0]    Input_activation_main_memory [IA_H-1:0][IA_W-1:0]; // main memory (DRAM)
     reg signed  [BW_ACT-1:0]    Weight_main_memory [Weight_H-1:0][Weight_W-1:0];
     reg signed  [BW_ACT-1:0]    Output_activation_main_memory [OA_H-1:0][OA_W-1:0];
     reg signed  [BW_ACT-1:0]    reference_output [OA_H-1:0][OA_W-1:0];
 
-    MultAddTree #(
-                    .MAC_NUM(MAC_NUM),
-                    .ACCU_NUM_LOG2($clog2(ACCU_NUM)),
+    SystolicArrayv1 #(
+                    .BN_NUM(BN_NUM),
+                    .ACCU_NUM(ACCU_NUM),
                     .BW_ACT(BW_ACT),
                     .BW_WET(BW_WET),
                     .BW_ACCU(BW_ACCU)
-                ) u_MultAddTree (
+                ) u_SystolicArrayv1 (
                     .clk(clk),
                     .reset_n(reset_n),
                     .PE_mac_enable(PE_mac_enable),
@@ -53,7 +53,7 @@ module tb_MultAddTree; // test bench
         reset_n = 1;
         PE_res_shift_num = 8;
         PE_clear_acc = 0;
-        for(integer n = 0; n < MAC_NUM; n = n + 1) begin
+        for(integer n = 0; n < BN_NUM; n = n + 1) begin
             for (integer k = 0; k < ACCU_NUM; k = k + 1) begin
                 PE_act_in[n][k] <= '0;
             end
@@ -62,7 +62,7 @@ module tb_MultAddTree; // test bench
             PE_wet_in[k] <= '0;
         end
         forever begin
-            #(`CLK_PERIOD/2) clk = ~clk; //模拟时钟产生
+            #(`CLK_PERIOD/2) clk = ~clk; // 模拟时钟产生
         end
     end
     integer wrong_num=0; // 记录错误数据
@@ -71,9 +71,9 @@ module tb_MultAddTree; // test bench
         reset_n = 0; //经过一个周期，拉低reset信号
 
         // 加载任务数据（不是相对testbench的路径，而是相对于simv文件的路径）
-        $readmemb("../test/input_act_bin.txt", Input_activation_main_memory);
-        $readmemb("../test/weight_bin.txt", Weight_main_memory);
-        $readmemb("../test/reference_output_bin.txt", reference_output);
+        $readmemb("../test/input_act_bin_simple2.txt", Input_activation_main_memory);
+        $readmemb("../test/weight_bin_simple2.txt", Weight_main_memory);
+        $readmemb("../test/reference_output_bin_simple2.txt", reference_output);
 
         // loop nest
         @(negedge clk);
@@ -81,38 +81,43 @@ module tb_MultAddTree; // test bench
 
         PE_mac_enable = 1;
         for (integer m = 0; m < OA_W; m = m + 1) begin
-            for (integer j = 0; j < IA_H / MAC_NUM; j = j + 1) begin
+            for (integer j = 0; j < IA_H / BN_NUM; j = j + 1) begin
                 for (integer i = 0; i < IA_W / ACCU_NUM; i = i + 1) begin
+                    // load weight to the buffer first
                     @(negedge clk) begin
                         if (i == 0) begin
-                            PE_clear_acc <= 0; // clean the zero
+                            PE_clear_acc <= 0; // 确保清零工作准时结束
                         end
-                        for (integer n = 0; n < MAC_NUM; n = n + 1) begin // 相当于课件中的spatial for，在一个周期内完成
-                            for (integer accu_i = 0; accu_i < ACCU_NUM; accu_i = accu_i + 1) begin
-                                PE_act_in[n][accu_i] <= Input_activation_main_memory[j*MAC_NUM+n][i*ACCU_NUM+accu_i];
+                        PE_wet_in <= Weight_main_memory[i*ACCU_NUM+accu_i][m];
+                    end 
+                end
+                for (integer i = 0; i < BN_NUM; i = i + 1) begin
+                    // then load the activation
+                    @(negedge clk) begin
+                        if (i < BN_NUM - ACCU_NUM) begin
+                            for (integer k = 0; k < i; k = k + 1) begin
+                                PE_act_in[k] <= Input_activation_main_memory[j*BN_NUM+i-k][k];
+                            end
+                            for (integer k = i; k < ACCU_NUM; k = k + 1) begin
+                                PE_act_in[k] <= 0;
                             end
                         end
-                        // PE_wet_in <= Weight_main_memory[i][m];
-                        for (integer accu_i = 0; accu_i < ACCU_NUM; accu_i = accu_i + 1) begin
-                            PE_wet_in[accu_i] <= Weight_main_memory[i*ACCU_NUM+accu_i][m];
+                        else if (i < BN_NUM) begin
+                            for (integer k = 0; k < ACCU_NUM; k = k + 1) begin
+                                PE_act_in[k] <= Input_activation_main_memory[j*BN_NUM+i-k][k];
+                            end
                         end
-                    end
-                end
-                if (IA_W % ACCU_NUM != 0) begin // padding numbers
-                    @(negedge clk) begin
-                        if (IA_W < ACCU_NUM) begin
-                            PE_clear_acc <= 0; // clean the zero
+                        else if (i < BN_NUM + ACCU_NUM) begin
+                            for (integer k = 0; k < BN_NUM + ACCU_NUM - i; k = k + 1) begin
+                                PE_act_in[k] <= 0;
+                            end
+                            for (integer k = BN_NUM - i; k < ACCU_NUM; k = k + 1) begin
+                                PE_act_in[k] <= Input_activation_main_memory[j*BN_NUM+i-k][k];
+                            end
                         end
-                        for (integer n = 0; n < MAC_NUM; n = n + 1) begin
-                            for (integer accu_i = 0; accu_i < ACCU_NUM; accu_i = accu_i + 1) begin
-                                if (accu_i < IA_W % ACCU_NUM) begin
-                                    PE_act_in[n][accu_i] <= Input_activation_main_memory[j*MAC_NUM+n][(IA_W / ACCU_NUM)*ACCU_NUM+accu_i];
-                                    PE_wet_in[accu_i] <= Weight_main_memory[(IA_W / ACCU_NUM)*ACCU_NUM+accu_i][m];
-                                end
-                                else begin
-                                    PE_act_in[n][accu_i] <= '0;
-                                    PE_wet_in[accu_i] <= '0;
-                                end
+                        else begin
+                            for (integer k = 0; k < ACCU_NUM; k = k + 1) begin
+                                PE_act_in[k] <= 0;
                             end
                         end
                     end
@@ -125,8 +130,8 @@ module tb_MultAddTree; // test bench
                     end
                     @(negedge clk);
                     @(negedge clk) begin
-                        for(integer n = 0; n < MAC_NUM; n = n + 1) begin
-                            Output_activation_main_memory[j*MAC_NUM+n][m] <= PE_result_out[n];
+                        for(integer n = 0; n < BN_NUM; n = n + 1) begin
+                            Output_activation_main_memory[j*BN_NUM+n][m] <= PE_result_out[n];
                         end
                     end
                 end

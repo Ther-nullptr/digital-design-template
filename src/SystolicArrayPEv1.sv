@@ -33,6 +33,6 @@ module SystolicArrayPEv1 # (
       PE_wet_in_reg <= PE_above_in[BW_WET-1:0]
     end
   end
-  assign PE_out = weight_partial_sel ? (PE_mac_enable ? (PE_above_in + PE_act_in * PE_wet_in_reg) : 'b0) : PE_wet_in_reg;
+  assign PE_below_out = weight_partial_sel ? (PE_mac_enable ? (PE_above_in + PE_act_in * PE_wet_in_reg) : 'b0) : PE_wet_in_reg;
 
 endmodule

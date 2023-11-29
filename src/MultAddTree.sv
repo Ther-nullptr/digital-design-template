@@ -23,7 +23,7 @@ module MultAddTree # (
   input             [7:0]           PE_res_shift_num,
   output reg signed [BW_ACT-1:0]    PE_result_out [MAC_NUM-1:0]
 );
-  // localparam ACCU_NUM = 1 << ACCU_NUM_LOG2;
+
   localparam PE_MEDIUM_RESULT_REG = 2 * ACCU_NUM - 1;
 
   reg signed [BW_ACT-1:0]    PE_act_in_reg [MAC_NUM-1:0][ACCU_NUM-1:0];      // input buffer

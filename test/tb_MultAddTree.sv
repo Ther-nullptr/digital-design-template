@@ -3,18 +3,25 @@
 
 module tb_MultAddTree; // test bench
 
-    parameter MAC_NUM    =   1;  // number of multiply-accumulation units
+    parameter MAC_NUM    =   4;  // number of multiply-accumulation units
     parameter ACCU_NUM   =   4;  // number of accumulate units
     parameter BW_ACT     =   8;  // bit length of activation
     parameter BW_WET     =   8;  // bit length of weight
     parameter BW_ACCU    =   32;    // bit length of accu result
 
-    parameter IA_H = 100;
-    parameter IA_W = 150;
-    parameter Weight_H = 150;
-    parameter Weight_W = 16;
-    parameter OA_H = 100;
-    parameter OA_W = 16;
+    // parameter IA_H = 100;
+    // parameter IA_W = 150;
+    // parameter Weight_H = 150;
+    // parameter Weight_W = 16;
+    // parameter OA_H = 100;
+    // parameter OA_W = 16;
+
+    parameter IA_H = 8;
+    parameter IA_W = 8;
+    parameter Weight_H = 8;
+    parameter Weight_W = 8;
+    parameter OA_H = 8;
+    parameter OA_W = 8;
 
     reg clk;
     reg reset_n;
@@ -71,9 +78,9 @@ module tb_MultAddTree; // test bench
         reset_n = 0; //经过一个周期，拉低reset信号
 
         // 加载任务数据（不是相对testbench的路径，而是相对于simv文件的路径）
-        $readmemb("../test/input_act_bin.txt", Input_activation_main_memory);
-        $readmemb("../test/weight_bin.txt", Weight_main_memory);
-        $readmemb("../test/reference_output_bin.txt", reference_output);
+        $readmemb("../test/input_act_bin_simple2.txt", Input_activation_main_memory);
+        $readmemb("../test/weight_bin_simple2.txt", Weight_main_memory);
+        $readmemb("../test/reference_output_bin_simple2.txt", reference_output);
 
         // loop nest
         @(negedge clk);
