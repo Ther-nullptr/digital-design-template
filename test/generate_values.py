@@ -5,11 +5,13 @@ if __name__ == '__main__':
     a = np.arange(size*size).reshape(size, size)
     b = np.arange(size*size).reshape(size, size)
     
-    c = (a @ b) // 2 ** 8
+    c = (a @ b) 
+    d = c // 2**8
     
     print(a)
     print(b)
     print(c)
+    print(d)
     
     # print the binary representation of the values(8 bit signed)
     print('----a----')
@@ -34,6 +36,15 @@ if __name__ == '__main__':
     for i in range(size):
         for j in range(size):
             number = bin(c[i,j] & 0xff)[2:]
+            # padding to 8 bits
+            if len(number) < 8:
+                number = '0' * (8 - len(number)) + number
+            print(number)
+            
+    print('----d----')
+    for i in range(size):
+        for j in range(size):
+            number = bin(d[i,j] & 0xff)[2:]
             # padding to 8 bits
             if len(number) < 8:
                 number = '0' * (8 - len(number)) + number
