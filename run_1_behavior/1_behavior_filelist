@@ -1,2 +1,3 @@
-../src/pe_array.sv
-../test/tb_pe_array.sv
+../src/SystolicArrayPEv1.sv
+../src/SystolicArrayv1.sv
+../test/tb_SystolicArrayv1.sv
