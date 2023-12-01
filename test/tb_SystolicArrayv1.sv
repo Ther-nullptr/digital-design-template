@@ -3,18 +3,25 @@
 
 module tb_SystolicArrayv1; // test bench
 
-    parameter BN_NUM     =   4;  // number of multiply-accumulation units
-    parameter ACCU_NUM   =   2;  // number of accumulate units
+    parameter BN_NUM     =   5;  // number of multiply-accumulation units
+    parameter ACCU_NUM   =   5;  // number of accumulate units
     parameter BW_ACT     =   8;  // bit length of activation
     parameter BW_WET     =   8;  // bit length of weight
     parameter BW_ACCU    =   32; // bit length of accu result
 
-    parameter IA_H       =   8;
-    parameter IA_W       =   8;
-    parameter Weight_H   =   8;
-    parameter Weight_W   =   8;
-    parameter OA_H       =   8;
-    parameter OA_W       =   8;
+    parameter IA_H = 100;
+    parameter IA_W = 150;
+    parameter Weight_H = 150;
+    parameter Weight_W = 16;
+    parameter OA_H = 100;
+    parameter OA_W = 16;
+
+    // parameter IA_H       =   8;
+    // parameter IA_W       =   8;
+    // parameter Weight_H   =   8;
+    // parameter Weight_W   =   8;
+    // parameter OA_H       =   8;
+    // parameter OA_W       =   8;
 
     reg clk;
     reg reset_n;
@@ -73,9 +80,9 @@ module tb_SystolicArrayv1; // test bench
         reset_n = 0; //经过一个周期，拉低reset信号
 
         // 加载任务数据（不是相对testbench的路径，而是相对于simv文件的路径）
-        $readmemb("../test/input_act_bin_simple2.txt", Input_activation_main_memory);
-        $readmemb("../test/weight_bin_simple2.txt", Weight_main_memory);
-        $readmemb("../test/reference_output_bin_simple2.txt", reference_output);
+        $readmemb("../test/input_act_bin.txt", Input_activation_main_memory);
+        $readmemb("../test/weight_bin.txt", Weight_main_memory);
+        $readmemb("../test/reference_output_bin.txt", reference_output);
 
         // loop nest
         @(negedge clk);
@@ -147,13 +154,13 @@ module tb_SystolicArrayv1; // test bench
             //所有数据都算完后，与reference output进行比对，检验正确与否
             for(integer k=0;k<OA_H;k=k+1) begin
                 for(integer p=0;p<OA_W;p=p+1) begin
-                    // if(Output_activation_main_memory[k][p]!=reference_output[k][p]) begin
+                    if (Output_activation_main_memory[k][p]!=reference_output[k][p]) begin
                         $display("(%d %d), output %d, reference %d", k, p, Output_activation_main_memory[k][p], reference_output[k][p]);
-                        // wrong_num = wrong_num + 1;
-                    // end 
+                        wrong_num = wrong_num + 1;
+                    end 
                 end
             end
-            //$display("wrong num: %d",wrong_num);
+            $display("wrong num: %d",wrong_num);
         @(negedge clk)
          $finish(0); // 仿真结束，自动退出 !!! (important for getting the running time)
     end

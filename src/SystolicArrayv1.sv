@@ -36,6 +36,8 @@ module SystolicArrayv1 # (
   wire PE_internel_weight_partial_sel [ACCU_NUM-2:0];
   reg signed [BW_ACCU-1:0]  PE_result_out_part_temp;
 
+  reg PE_weight_partial_sel_reg; // last cycle's PE_weight_partial_sel
+
   localparam CYCLE_BEGIN_SAVE = ACCU_NUM + BN_NUM + 1;
 
   // only for waveform
@@ -78,6 +80,15 @@ module SystolicArrayv1 # (
     end
     else begin
       PE_clear_acc_reg <= PE_clear_acc;
+    end
+  end
+
+  always @(posedge clk or negedge reset_n) begin
+    if(~reset_n) begin
+      PE_weight_partial_sel_reg <= 'b1;
+    end
+    else begin
+      PE_weight_partial_sel_reg <= PE_weight_partial_sel;
     end
   end
 
@@ -186,24 +197,30 @@ module SystolicArrayv1 # (
 
   always @(posedge clk or negedge reset_n) begin
     if(~reset_n) begin
-      counter <= 0;
+      counter <= 'b0;
+    end
+    else begin
+      if ((PE_weight_partial_sel_reg == 1'b1 && PE_weight_partial_sel == 1'b0) || PE_clear_acc == 1'b1) begin
+        counter <= 0;
+      end
+      else begin
+        counter <= counter + 1;
+      end
+    end
+  end
+
+  always @(posedge clk or negedge reset_n) begin
+    if(~reset_n) begin
       for (integer i = 0; i < BN_NUM; i = i + 1) begin
         PE_result_out_reg[i] <= 'b0;
       end
     end
-    else if (PE_clear_acc) begin
-      counter <= 1;
-    end
     else begin
-      counter <= counter + 1;
-      if (counter >= CYCLE_BEGIN_SAVE && counter < CYCLE_BEGIN_SAVE + BN_NUM) begin
+      if (counter >= ACCU_NUM && counter < ACCU_NUM + BN_NUM) begin
         for (integer move_i = 0; move_i < BN_NUM - 1; move_i++) begin
           PE_result_out_reg[move_i] <= PE_result_out_reg[move_i + 1];
         end
         PE_result_out_reg[BN_NUM - 1] <= PE_result_out_part_temp;
-      end
-      if (counter == CYCLE_BEGIN_SAVE + BN_NUM) begin
-        counter <= BN_NUM;
       end
     end
   end
@@ -220,7 +237,7 @@ module SystolicArrayv1 # (
           PE_result_out_reg_accumulate[i] <= 'b0;
         end
       end
-      if (counter == CYCLE_BEGIN_SAVE + BN_NUM) begin
+      if (counter == BN_NUM + ACCU_NUM) begin
         for (integer i = 0; i < BN_NUM; i = i + 1) begin
           PE_result_out_reg_accumulate[i] <= PE_result_out_reg[i] + PE_result_out_reg_accumulate[i];
         end
