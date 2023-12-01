@@ -56,7 +56,7 @@ module tb_SystolicArrayv1; // test bench
         clk = 0;
         reset_n = 1;
         PE_res_shift_num = 8;
-        PE_clear_acc = 0;
+        PE_clear_acc = 1;
         PE_wet_in = 0;
         PE_weight_partial_sel = 1;
         receive_signal = 0;
