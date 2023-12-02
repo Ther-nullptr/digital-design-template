@@ -33,12 +33,9 @@ module SystolicArrayv1 # (
   reg PE_clear_acc_reg; // delay 1 cycle for control signal
 
   wire signed [BW_ACCU-1:0]  PE_internal_wire_temp [ACCU_NUM-2:0];
-  wire PE_internel_weight_partial_sel [ACCU_NUM-2:0];
-  reg signed [BW_ACCU-1:0]  PE_result_out_part_temp;
+  wire signed [BW_ACCU-1:0]  PE_result_out_part_temp;
 
   reg PE_weight_partial_sel_reg; // last cycle's PE_weight_partial_sel
-
-  localparam CYCLE_BEGIN_SAVE = ACCU_NUM + BN_NUM + 1;
 
   // only for waveform
   genvar gv_input, accu_i;
@@ -134,7 +131,6 @@ module SystolicArrayv1 # (
           .PE_weight_partial_sel(PE_weight_partial_sel),
           .PE_act_in(PE_act_in_reg[systolic_i]),
           .PE_above_in({24'b0, PE_wet_in_reg}),
-          .PE_weight_partial_sel_out(PE_internel_weight_partial_sel[systolic_i]),
           .PE_below_out(PE_internal_wire_temp[systolic_i])
         );
       end
@@ -152,7 +148,6 @@ module SystolicArrayv1 # (
           .PE_weight_partial_sel(PE_weight_partial_sel),
           .PE_act_in(PE_act_in_reg[systolic_i]),
           .PE_above_in(PE_internal_wire_temp[systolic_i - 1]),
-          .PE_weight_partial_sel_out(),
           .PE_below_out(PE_result_out_part_temp)
         );
       end
@@ -170,7 +165,6 @@ module SystolicArrayv1 # (
           .PE_weight_partial_sel(PE_weight_partial_sel),
           .PE_act_in(PE_act_in_reg[systolic_i]),
           .PE_above_in(PE_internal_wire_temp[systolic_i - 1]),
-          .PE_weight_partial_sel_out(PE_internel_weight_partial_sel[systolic_i]),
           .PE_below_out(PE_internal_wire_temp[systolic_i])
         );
       end
@@ -188,7 +182,6 @@ module SystolicArrayv1 # (
           .PE_weight_partial_sel(PE_weight_partial_sel),
           .PE_act_in(PE_act_in_reg[systolic_i]),
           .PE_above_in(PE_internal_wire_temp[systolic_i - 1]),
-          .PE_weight_partial_sel_out(),
           .PE_below_out(PE_result_out_part_temp)
         );
       end

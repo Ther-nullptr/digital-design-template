@@ -20,10 +20,10 @@ module SystolicArrayPEv1 # (
   input  PE_weight_partial_sel, // 0 for mac, 1 for weight
   input  signed [BW_ACT-1:0]  PE_act_in,
   input  signed [BW_ACCU-1:0] PE_above_in,
-  output reg PE_weight_partial_sel_out,
   output reg signed [BW_ACCU-1:0]  PE_below_out // when the weight spread out, the bitwidth is cut down
 );
   reg signed [BW_WET-1:0]   PE_wet_in_reg;      // weight buffer
+  reg PE_weight_partial_sel_out;
 
   always @(posedge clk or negedge reset_n) begin
     if (~reset_n) begin

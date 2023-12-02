@@ -2,8 +2,8 @@ import numpy as np
 
 if __name__ == '__main__':
     size = 8
-    a = np.arange(size*size).reshape(size, size)
-    b = np.arange(size*size).reshape(size, size)
+    a = np.random.randint(0, 2**8, size=(size, size))
+    b = np.random.randint(0, 2**8, size=(size, size))
     
     c = (a @ b) 
     d = c // 2**8
